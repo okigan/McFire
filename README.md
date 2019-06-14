@@ -1,0 +1,1 @@
+Monte Carlo simulation for [FIRE](https://www.playingwithfire.co/whatisfire)
