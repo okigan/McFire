@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-jupyter nbconvert --to python mcfire/mcfire.ipynb
-pycodestyle -v mcfire
+jupytext --test --to ipynb  mcfire/mcfire.py
+jupytext --to ipynb  mcfire/mcfire.py
+pycodestyle -v --exclude=*.pynb_checkpoints/* mcfire
 py.test -v
 
