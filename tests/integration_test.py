@@ -14,7 +14,7 @@ from unittest import TestCase
 __author__ = 'iokulist'
 
 
-class TestMakeRequestWithToken(TestCase):
+class TestMcFire(TestCase):
     maxDiff = None
 
     # @mock.patch('get_ipython', side_effect=get_ipython_xxx)

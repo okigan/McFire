@@ -1,3 +1,18 @@
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.2'
+#       jupytext_version: 1.1.6
+#   kernelspec:
+#     display_name: Python 3
+#     language: python
+#     name: python3
+# ---
+
+# %% [markdown]
 # Related links
 #
 #
@@ -5,8 +20,7 @@
 # *   [Nest egg Monter Carlo Simulation on Vanguard](https://retirementplans.vanguard.com/VGApp/pe/pubeducation/calculators/RetirementNestEggCalc.jsf)
 #
 
-
-# %%
+# %% {"pycharm": {"is_executing": false, "name": "#%%\n"}}
 import os
 import random
 import matplotlib.pyplot as plt
@@ -16,8 +30,9 @@ import yaml
 
 
 # https://retirementplans.vanguard.com/VGApp/pe/pubeducation/calculators/RetirementNestEggCalc.jsf
-# %%
 
+
+# %% {"pycharm": {"is_executing": false, "name": "#%%\n"}}
 def run_from_ipython():
     try:
         __IPYTHON__
@@ -25,11 +40,12 @@ def run_from_ipython():
     except NameError:
         return False
 
+
 if run_from_ipython():
-    get_ipython().system('python -m pip install PyYAML')
+    os.system('python -m pip install PyYAML')
 
 
-# %%
+# %% {"pycharm": {"is_executing": false, "name": "#%%\n"}}
 def load_personal_finance(path):
     personal_finance = {}
     if os.path.exists(path):
@@ -39,13 +55,13 @@ def load_personal_finance(path):
     return personal_finance
 
 
-# %%
+# %% {"pycharm": {"is_executing": false, "name": "#%%\n"}}
 # @title age { run: "auto" }
 current_age = 25  # @param {type:"slider", min:0, max:100, step:1}
 retire_age = 45  # @param {type:"slider", min:0, max:100, step:1}
 end_of_life_age = 90  # @param {type:"slider", min:0, max:100, step:1}
 
-# %%
+# %% {"pycharm": {"name": "#%%\n"}}
 # @title savings { run: "auto" }
 post_tax_current_savings = 100000  # @param {type:"slider", min:0, max:10000000, step:1000}
 yearly_post_tax_and_benefits_income = 100000  # @param {type:"slider", min:0, max:10000000, step:1000}
@@ -60,18 +76,26 @@ tax_deferred_federal_limit = 280000  # @param {type:"slider", min:0, max:1000000
 tax_free_current_savings = 5000  # @param {type:"slider", min:0, max:10000, step:1000}
 tax_free_yearly_savings = 26000  # @param {type:"slider", min:0, max:100000, step:1000}
 
-# %%
+# %% {"pycharm": {"name": "#%%\n"}}
 # @title rates { run: "auto" }
 tax_rate = 0.30  # @param {type:"slider", min:0, max:1, step:0.01}
 post_tax_to_tax_deferred_adj = 1 / (1 - tax_rate)
 
 inflation_min = 1  # @param {type:"slider", min:-5, max:25, step:1}
 inflation_max = 4  # @param {type:"slider", min:-5, max:25, step:1}
-inflation = lambda: random.uniform(inflation_min, inflation_max) / 100
+
+
+def inflation():
+    random.uniform(inflation_min, inflation_max) / 100
+
 
 rate_of_return_min = -8  # @param {type:"slider", min:-10, max:100, step:1}
 rate_of_return_max = 12  # @param {type:"slider", min:-10, max:100, step:1}
-rate_of_return = lambda: random.uniform(rate_of_return_min, rate_of_return_max) / 100
+
+
+def rate_of_return():
+    random.uniform(rate_of_return_min, rate_of_return_max) / 100
+
 
 simulations = 100
 
@@ -81,9 +105,9 @@ simulations = 100
 # for k,v in personal_finance.items():
 #     globals()[k] = v
 # print(personal_finance)
-# %%
 
 
+# %% {"pycharm": {"is_executing": false, "name": "#%%\n"}}
 def subtract_with_remainder(balance, amount):
     """
     subtract from balance, cap minimum balance at zero and return remaining amount (to subtract)
@@ -144,7 +168,7 @@ def simulate(steps):
 
         tax_deferred_yearly_change = tax_deferred_balance[step - 1] * this_year_rate_of_return + (
             tax_deferred_yearly_savings if not retired else 0) + (
-                                         tax_deferred_yearly_employer_contributions if not retired else 0)
+            tax_deferred_yearly_employer_contributions if not retired else 0)
 
         tax_free_yearly_change = tax_free_balance[step - 1] * this_year_rate_of_return
 
@@ -187,9 +211,7 @@ def simulate_and_plot():
     print(statistics.mean(outcomes))
 
 
-
-
 if __name__ == "__main__" or run_from_ipython():
     simulate_and_plot()
 
-# %%
+# %% {"pycharm": {"name": "#%%\n"}}
