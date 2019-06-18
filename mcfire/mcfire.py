@@ -21,6 +21,57 @@
 #
 
 # %% {"pycharm": {"is_executing": false, "name": "#%%\n"}}
+# @title age { run: "auto" }
+current_age = 25  # @param {type:"slider", min:0, max:100, step:1}
+retire_age = 45  # @param {type:"slider", min:0, max:100, step:1}
+end_of_life_age = 90  # @param {type:"slider", min:0, max:100, step:1}
+
+# %% {"pycharm": {"name": "#%%\n"}}
+# @title savings { run: "auto" }
+post_tax_current_savings = 100000  # @param {type:"slider", min:0, max:10000000, step:1000}
+yearly_post_tax_and_benefits_income = 100000  # @param {type:"slider", min:0, max:10000000, step:1000}
+yearly_post_tax_and_benefits_spend = 50000  # @param {type:"slider", min:0, max:10000000, step:1000}
+
+tax_deferred_current_savings = 20000  # @param {type:"slider", min:0, max:10000000, step:1000}
+tax_deferred_yearly_savings = 19000  # @param {type:"slider", min:0, max:10000000, step:1000}
+tax_deferred_employer_matching_rate = 1.0  # @param {type:"slider", min:0, max:2, step:0.1}
+tax_deferred_maximum_of_federal_limit = 0.035  # @param {type:"slider", min:0, max:2, step:0.001}
+tax_deferred_federal_limit = 280000  # @param {type:"slider", min:0, max:10000000, step:10000}
+
+tax_free_current_savings = 5000  # @param {type:"slider", min:0, max:10000, step:1000}
+tax_free_yearly_savings = 26000  # @param {type:"slider", min:0, max:100000, step:1000}
+
+# %% {"pycharm": {"name": "#%%\n"}}
+# @title rates { run: "auto" }
+tax_rate = 0.30  # @param {type:"slider", min:0, max:1, step:0.01}
+post_tax_to_tax_deferred_adj = 1 / (1 - tax_rate)
+
+inflation_min = 1  # @param {type:"slider", min:-5, max:25, step:1}
+inflation_max = 4  # @param {type:"slider", min:-5, max:25, step:1}
+
+rate_of_return_min = -8  # @param {type:"slider", min:-10, max:100, step:1}
+rate_of_return_max = 12  # @param {type:"slider", min:-10, max:100, step:1}
+
+simulations = 100
+
+
+def inflation():
+    return random.uniform(inflation_min, inflation_max) / 100
+
+
+def rate_of_return():
+    return random.uniform(rate_of_return_min, rate_of_return_max) / 100
+
+
+# # update with values from personal_finance
+# personal_finance = load_personal_finance(os.path.expanduser("~/personal_finance.yaml"))
+# for k,v in personal_finance.items():
+#     globals()[k] = v
+# print(personal_finance)
+
+
+
+# %% {"pycharm": {"is_executing": false, "name": "#%%\n"}}
 import os
 import random
 import matplotlib.pyplot as plt
@@ -55,56 +106,6 @@ def load_personal_finance(path):
     return personal_finance
 
 
-# %% {"pycharm": {"is_executing": false, "name": "#%%\n"}}
-# @title age { run: "auto" }
-current_age = 25  # @param {type:"slider", min:0, max:100, step:1}
-retire_age = 45  # @param {type:"slider", min:0, max:100, step:1}
-end_of_life_age = 90  # @param {type:"slider", min:0, max:100, step:1}
-
-# %% {"pycharm": {"name": "#%%\n"}}
-# @title savings { run: "auto" }
-post_tax_current_savings = 100000  # @param {type:"slider", min:0, max:10000000, step:1000}
-yearly_post_tax_and_benefits_income = 100000  # @param {type:"slider", min:0, max:10000000, step:1000}
-yearly_post_tax_and_benefits_spend = 50000  # @param {type:"slider", min:0, max:10000000, step:1000}
-
-tax_deferred_current_savings = 20000  # @param {type:"slider", min:0, max:10000000, step:1000}
-tax_deferred_yearly_savings = 19000  # @param {type:"slider", min:0, max:10000000, step:1000}
-tax_deferred_employer_matching_rate = 1.0  # @param {type:"slider", min:0, max:2, step:0.1}
-tax_deferred_maximum_of_federal_limit = 0.035  # @param {type:"slider", min:0, max:2, step:0.001}
-tax_deferred_federal_limit = 280000  # @param {type:"slider", min:0, max:10000000, step:10000}
-
-tax_free_current_savings = 5000  # @param {type:"slider", min:0, max:10000, step:1000}
-tax_free_yearly_savings = 26000  # @param {type:"slider", min:0, max:100000, step:1000}
-
-# %% {"pycharm": {"name": "#%%\n"}}
-# @title rates { run: "auto" }
-tax_rate = 0.30  # @param {type:"slider", min:0, max:1, step:0.01}
-post_tax_to_tax_deferred_adj = 1 / (1 - tax_rate)
-
-inflation_min = 1  # @param {type:"slider", min:-5, max:25, step:1}
-inflation_max = 4  # @param {type:"slider", min:-5, max:25, step:1}
-
-
-def inflation():
-    random.uniform(inflation_min, inflation_max) / 100
-
-
-rate_of_return_min = -8  # @param {type:"slider", min:-10, max:100, step:1}
-rate_of_return_max = 12  # @param {type:"slider", min:-10, max:100, step:1}
-
-
-def rate_of_return():
-    random.uniform(rate_of_return_min, rate_of_return_max) / 100
-
-
-simulations = 100
-
-
-# # update with values from personal_finance
-# personal_finance = load_personal_finance(os.path.expanduser("~/personal_finance.yaml"))
-# for k,v in personal_finance.items():
-#     globals()[k] = v
-# print(personal_finance)
 
 
 # %% {"pycharm": {"is_executing": false, "name": "#%%\n"}}
@@ -139,6 +140,8 @@ def subtract_balances(amount: int,
 
     tax_free_balance[step], amount = subtract_with_remainder(tax_free_balance[step], amount)
 
+    return post_tax_balance[step], tax_deferred_balance[step], tax_free_balance[step], amount
+
 
 # %%
 def simulate(steps):
@@ -154,14 +157,17 @@ def simulate(steps):
         retired = (step + current_age) >= retire_age
         this_year_rate_of_return = rate_of_return()
         this_year_inflation = inflation()
+
+        # post tax changes
         yearly_post_tax_and_benefits_spend_inflation_adjusted[step] = \
             yearly_post_tax_and_benefits_spend_inflation_adjusted[step - 1] * (1 + this_year_inflation)
 
         post_tax_interest = post_tax_balance[step - 1] * this_year_rate_of_return
         tax_on_post_tax_interest = post_tax_interest * tax_rate
-        post_tax_yearly_change = post_tax_interest + - tax_on_post_tax_interest + (
+        post_tax_yearly_change = post_tax_interest - tax_on_post_tax_interest + (
             yearly_post_tax_and_benefits_income if not retired else 0)
 
+        # tax deferred changes
         tax_deferred_yearly_employer_contributions = min(
             tax_deferred_yearly_savings * tax_deferred_employer_matching_rate,
             tax_deferred_maximum_of_federal_limit * tax_deferred_federal_limit)
@@ -170,8 +176,10 @@ def simulate(steps):
             tax_deferred_yearly_savings if not retired else 0) + (
             tax_deferred_yearly_employer_contributions if not retired else 0)
 
+        # tax free
         tax_free_yearly_change = tax_free_balance[step - 1] * this_year_rate_of_return
 
+        # update balances
         post_tax_balance[step] = post_tax_balance[step - 1] + post_tax_yearly_change
         tax_deferred_balance[step] = tax_deferred_balance[step - 1] + tax_deferred_yearly_change
         tax_free_balance[step] = tax_free_balance[step - 1] + tax_free_yearly_change
